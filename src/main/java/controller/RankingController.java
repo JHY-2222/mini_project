@@ -1,0 +1,33 @@
+package controller;
+
+import java.io.IOException;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+@WebServlet("/ranking")
+public class RankingController extends HttpServlet {
+	
+	private RankingService service = new RankingService();
+	
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		 try {
+	            // DB에서 score 기준으로 랭킹 조회
+	            List<User> list = service.showRanking();
+
+	            // JSP로 전달
+	            request.setAttribute("rankingList", list);
+	            request.getRequestDispatcher("/ranking.jsp")
+	               .forward(request, response);
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            throw new ServletException(e);
+	        }
+	}
+
+}
