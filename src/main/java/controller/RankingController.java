@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import domain.User;
+import service.RankingService;
+
 @WebServlet("/ranking")
 public class RankingController extends HttpServlet {
 	

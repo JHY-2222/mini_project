@@ -1,28 +1,12 @@
 @charset "UTF-8";
 
 /* 시작페이지용 css --*/
-body {
-    margin: 0;
-    font-family: 'Arial';
-}
-
-.main-bg {
-    background: url("../assets/first_page.png") no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
-}
-
 .main-container {
     position: absolute;
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
     text-align: center;
-}
-
-.logo {
-    width: 300px;
-    margin-bottom: 30px;
 }
 
 .btn-group {
@@ -50,22 +34,6 @@ body {
     height: 100vh;
 }
 
-.nav {
-    display: flex;
-    gap: 30px;
-    padding: 20px 40px;
-    background: white;
-    font-weight: bold;
-}
-
-.nav a {
-    text-decoration: none;
-    color: #333;
-}
-
-.nav .active {
-    color: #4caf50;
-}
 
 .rank-box {
     width: 600px;

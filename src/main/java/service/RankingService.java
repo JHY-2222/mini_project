@@ -12,5 +12,7 @@ public class RankingService {
     // 점수(score) 기준 랭킹 조회
     public List<User> showRanking() throws Exception {
         return dao.showRanking();
+    }
         
 }
+

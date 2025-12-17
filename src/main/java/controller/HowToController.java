@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-@WebServlet("/first")
-public class FirstPageController extends HttpServlet {
+@WebServlet("/howto")
+public class HowToController extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.getRequestDispatcher("/firstPage.jsp").forward(request, response);
+		request.getRequestDispatcher("/howTo.jsp").forward(request, response);
 	}
-
 }
