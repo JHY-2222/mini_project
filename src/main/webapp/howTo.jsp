@@ -5,12 +5,11 @@
 <head>
 <meta charset="UTF-8">
 <title>게임 방법</title>
-<link rel="stylesheet" href="style.css">
 
 <style>
     body {
 	    margin: 0;
-	    font-family: 'Malgun Gothic', 'Arial', sans-serif;;
+	    font-family: 'Comic Sans MS', cursive;
         background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) /*배경 불투명*/
         			,url("${pageContext.request.contextPath}/assets/first_page.png")
                     no-repeat center center fixed;
@@ -48,6 +47,7 @@
         font-size: 1.5rem;
         color: #000;
         margin-right: 50px;     /* 로고와 메뉴 사이 거리 */
+        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
     }
 
     /* 메뉴 링크들 */
@@ -56,14 +56,24 @@
         color: #555;
         font-weight: bold;
         font-size: 1.1rem;
+        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
     }
 
     /* 활성화된 메뉴 (HOW) */
     .nav a.active {
         color: #85BE57; 
     }
+    
+    /* 프로필 이미지 */
+    .profile-img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-left: 30px; /* 메뉴와 간격 */
+    }
 
-    /* 3. 게임 방법 흰색 박스 (이미지 중앙 박스) */
+    /* 게임 방법 흰색 박스 */
     .how-box {
         background-color: #ffffff; /* 순백색 배경 */
         
@@ -77,6 +87,9 @@
         border-radius: 30px;       /* 모서리를 아주 둥글게 */
         box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
         text-align: left;          /* 텍스트 왼쪽 정렬 */
+        
+        /* 지글지글 효과 추가 */
+        filter: url(#squiggle-filter);
     }
 
     /* 박스 제목 (게임 방법) */
@@ -87,6 +100,8 @@
         margin-bottom: 3vh;
         color: #000;
         text-align: left;
+        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
+        letter-spacing: 2px; /* 글자 간격 추가 */
     }
 
     .how-box ol {
@@ -99,26 +114,43 @@
         line-height: 2.2;           /* 줄 간격 넉넉하게 */
         color: #333;
         font-weight: 600;
+        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
+        letter-spacing: 1px; /* 글자 간격 추가 */
     }
 </style>
 
 </head>
 <body>
-<nav class="nav">
-    <span class="logo-text">OMOK</span>
-    <a href="room">HOME</a>
-    <a href="ranking">RANK</a>
-    <a class="active">HOW</a>
-</nav>
-
-<div class="how-box">
-    <h2>게임 방법</h2>
-    <ol>
-        <li>플레이어는 번갈아 돌을 둡니다</li>
-        <li>가로 / 세로 / 대각선 5목 완성 시 승리</li>
-        <li>상대 턴에는 돌을 둘 수 없습니다</li>
-        <li>승리 시 점수가 랭킹에 반영됩니다</li>
-    </ol>
-</div>
+	<!-- 지글지글 효과를 위한 SVG 필터 -->
+	<svg style="position: absolute; width: 0; height: 0;">
+	    <defs>
+	        <filter id="squiggle-filter">
+	            <feTurbulence baseFrequency="0.02" numOctaves="3" seed="2" />
+	            <feDisplacementMap in="SourceGraphic" scale="3" />
+	        </filter>
+	    </defs>
+	</svg>
+	
+	<nav class="nav">
+	    <span class="logo-text">OMOK</span>
+	    <a href="room">HOME</a>
+	    <a href="ranking">RANK</a>
+	    <a class="active">HOW</a>
+	    <!-- 프로필 이미지 추가 -->
+	    <img src="${pageContext.request.contextPath}/assets/profile_img.png" 
+	         alt="Profile" 
+	         class="profile-img"
+	         onclick="window.open('UserSet', 'UserSet', 'width=600,height=400')">
+	</nav>
+	
+	<div class="how-box">
+	    <h2>게임 방법</h2>
+	    <ol>
+	        <li>플레이어는 번갈아 돌을 둡니다</li>
+	        <li>가로 / 세로 / 대각선 5목 완성 시 승리</li>
+	        <li>상대 턴에는 돌을 둘 수 없습니다</li>
+	        <li>승리 시 점수가 랭킹에 반영됩니다</li>
+	    </ol>
+	</div>
 </body>
 </html>
