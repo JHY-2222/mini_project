@@ -11,61 +11,45 @@
 <style>
     body {
         margin: 0;
-        font-family: 'Comic Sans MS', cursive; /* 폰트 통일 */
+        font-family: 'Arial';
         background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), /* 배경 불투명 */
                     url("${pageContext.request.contextPath}/assets/first_page.png")
                     no-repeat center center fixed;
         background-size: cover;
         min-height: 100vh;
-        padding-top: 80px; /* 상단 메뉴바 공간 확보 */
+        padding-top: 80px;
     }
-
-    /* 상단 메뉴바 */
-    .nav {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 60px;
-        padding: 20px 0;
-        background: rgba(255, 255, 255);
-        border-bottom: 1px solid #ddd;
-        z-index: 1000;
-        /* 지글지글 효과 */
-        filter: url(#squiggle-filter);
-    }
-
-    .logo-text {
-        font-weight: 900;
-        font-style: italic;
-        font-size: 1.5rem;
-        color: #000;
-        margin-right: 50px;
-        font-family: 'Comic Sans MS', cursive;
-    }
-
-    .nav a {
-        text-decoration: none;
-        color: #555;
-        font-weight: bold;
-        font-size: 1.1rem;
-        font-family: 'Comic Sans MS', cursive;
-    }
-
-    .nav a.active {
-        color: #85BE57;
-    }
-
-    .profile-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        margin-left: 30px;
-    }
+    
+	.top-bar {
+	    background: #fff;
+	    height: 80px;
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    padding: 0 40px;
+	    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+	
+	.logo {
+	    font-size: 24px;
+	    font-weight: 800;
+	    padding-left: 50px;
+	}
+	
+	.menu ul {
+	    display: flex;
+	    list-style: none;
+	    padding: 0;
+	    margin: 0;
+	    gap: clamp(40px, 10vw, 300px);;
+	    padding-right: 100px;
+	}
+	
+	.menu li {
+	    cursor: pointer;
+	    font-weight: 600;
+	    font-size: 20px;
+	}
 
     /* 랭킹 박스 */
     .rank-box {
@@ -76,16 +60,14 @@
         padding: 40px;
         border-radius: 30px;
         text-align: center;
-        /* 지글지글 효과 */
-        filter: url(#squiggle-filter);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     }
 
     /* 랭킹 테이블 */
     .rank-table {
         width: 100%;
         border-collapse: collapse;
-        font-family: 'Comic Sans MS', cursive;
+        font-family: 'Arial';
+        font-weight: bold;
     }
 
     /* 테이블 헤더 */
@@ -95,8 +77,6 @@
         padding: 15px;
         font-size: 1.2rem;
         font-weight: bold;
-        /* 테이블 헤더에도 지글지글 효과 */
-        filter: url(#squiggle-filter);
     }
 
     /* 테이블 셀 */
@@ -104,13 +84,13 @@
         padding: 15px;
         border-bottom: 2px solid #eee;
         font-size: 1.1rem;
-        color: #333;
+        color: #000000;
     }
 
     /* 내 순위 강조 */
     .my-rank {
         background: #fff4e6;
-        border: 3px solid #ff9800;
+        border: 5px solid #ff9800;
         /* 지글지글 효과 */
         filter: url(#squiggle-filter);
     }
@@ -118,6 +98,7 @@
     .my-rank td {
         font-weight: bold;
         color: #ff6b00;
+        font-size: 1.8rem;
     }
 
     /* 1등 강조 */
@@ -129,6 +110,7 @@
     .rank-number {
         font-size: 1.3rem;
         font-weight: bold;
+        padding-bottom: 2px
     }
 
 	.crown-top {
@@ -139,41 +121,37 @@
     .crown-icon {
         font-size: 1.5rem;
     }
+    
+	a,
+	a:visited,
+	a:hover,
+	a:active {
+	    color: inherit;
+	    text-decoration: none;
+	}
 
-    /* 프로필 이미지 (테이블 안) */
-    .player-img {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        vertical-align: middle;
-        margin-right: 8px;
-    }
 </style>
 </head>
 <body>
-	<!-- 지글지글 효과를 위한 SVG 필터 -->
-	<svg style="position: absolute; width: 0; height: 0;">
-	    <defs>
-	        <filter id="squiggle-filter">
-	            <feTurbulence baseFrequency="0.02" numOctaves="3" seed="2" />
-	            <feDisplacementMap in="SourceGraphic" scale="3" />
-	        </filter>
-	    </defs>
-	</svg>
-
-	<nav class="nav">
-	    <span class="logo-text">OMOK</span>
-	    <a href="room">HOME</a>
-	    <a class="active">RANK</a>
-	    <a href="how">HOW</a>
-	    <a href="UserSet" target="_blank">
-	        <img src="${pageContext.request.contextPath}/assets/profile_img.png" 
-	             alt="Profile" 
-	             class="profile-img">
-	    </a>
-	</nav>
+	<header class="top-bar">
+	    <div class="logo">OMOK</div>
+	    <nav class="menu">
+	        <ul>
+	            <li><a href="RoomList.jsp">HOME</a></li>
+	            <li>RANK</li>
+	            <li>HOW</li>
+	        </ul>
+	    </nav>
+	</header>
+	
 	<div class="rank-box">
 	    <div class="crown-top">👑</div>
+		<%-- Controller에서 setAttribute로 보낸 값 받는 부분 --%>
+	    <%
+	        List<User> list = (List<User>) request.getAttribute("rankingList");
+	        User myUser = (User) request.getAttribute("myUser");
+	        Integer myRank = (Integer) request.getAttribute("myRank");
+	    %>
 	
 	    <table class="rank-table">
 	        <tr>
@@ -182,53 +160,22 @@
 	            <th>점수</th>
 	        </tr>
 	
-	        <%
-	            List<User> list = (List<User>)request.getAttribute("rankingList");
-		        if(list == null) {
-		            list = new java.util.ArrayList<>(); // null이면 빈 리스트로 초기화
-		        }    
-	        
-	        String currentUserId = (String)session.getAttribute("USER_ID"); // 현재 로그인한 사용자 ID
-	            
-	            // 내 순위 찾기
-	            User myUser = null;
-	            int myRank = -1;
-	            for(int i = 0; i < list.size(); i++) {
-	                if(list.get(i).getUserId().equals(currentUserId)) {
-	                    myUser = list.get(i);
-	                    myRank = i + 1;
-	                    break;
-	                }
-	            }
-	            
-	            // 내 순위 먼저 출력
-	            if(myUser != null) {
-	        %>
+	        <%-- 내 순위 (없으면 NULL) --%>
+	        <% if (myUser != null && myRank != null) { %>
 	        <tr class="my-rank">
 	            <td class="rank-number"><%= myRank %></td>
 	            <td><%= myUser.getName() %></td>
 	            <td><%= myUser.getScore() %></td>
-	            <td>100%</td>
 	        </tr>
 	        <% } %>
 	
+	        <%-- DB 1~6위 출력 --%>
 	        <%
-	            // 1위부터 6위까지 출력 (내 순위 제외)
-	            int count = 0;
-	            for(int i = 0; i < list.size() && count < 6; i++) {
+	            for (int i = 0; i < list.size() && i < 6; i++) {
 	                User u = list.get(i);
-	                // 내 순위는 이미 출력했으므로 건너뜀
-	                if(myUser != null && u.getUserId().equals(currentUserId)) {
-	                    continue;
-	                }
-	                count++;
-	                int rank = i + 1;
-	                String rowClass = (rank == 1) ? "rank-1" : "";
 	        %>
-	        <tr class="<%= rowClass %>">
-	            <td class="rank-number">
-	                <%= (rank == 1) ? "<span class='crown-icon'>👑</span>" : rank %>
-	            </td>
+	        <tr class="<%= (i == 0) ? "rank-1" : "" %>">
+	            <td><%= (i == 0) ? "👑" : (i + 1) %></td>
 	            <td><%= u.getName() %></td>
 	            <td><%= u.getScore() %></td>
 	        </tr>

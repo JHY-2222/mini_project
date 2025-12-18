@@ -6,22 +6,20 @@
 <meta charset="UTF-8">
 <title>OMOK</title>
 
-<link rel="stylesheet"
-      href="${pageContext.request.contextPath}/style.css">
-
 <style>
     body {
 	    margin: 0;
 	    font-family: 'Arial';
         background: url("${pageContext.request.contextPath}/assets/first_page.png")
                     no-repeat center center fixed;
+        
         background-size: cover;
-        height: 100vh;
+        min-height: 100vh;
     }
     
     .main-container {
 	    position: absolute;
-	    bottom: 80px;
+	    bottom: 150px;
 	    left: 50%;
 	    transform: translateX(-50%);
 	    text-align: center;
@@ -35,21 +33,31 @@
         
     /* 버튼 스타일 변경 */
 	.btn {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		
 		background: #fff;
-        padding: 15px 40px;
+        padding: 1rem 5vw;
         text-decoration: none;
         color: #333;
         
-	    width: 400px; /* 너비 설정 */
-	    height: 50px; /* 높이 설정 */
-	    border-radius: 15px; /* 모서리 반경 */
-	    border: 3px solid #808080; /* 회색 테두리 */
+	    width: 20vw; /* 너비 설정 */
+	    max-width: 400px;
+	    min-width: 200px;
+	    
+	    height: 5vh; /* 높이 설정 */
+	    min-height: 50px;
+	    
+	    border-radius: 1rem; /* 모서리 반경 */
+	    border: 0.3rem solid #808080; /* 회색 테두리 */
+	    
 	    font-family: 'Comic Sans MS', cursive; /* 폰트 변경 */
 	    font-size: 32px; /* 폰트 크기 */
 	    font-weight: bold; /* 굵게 */
+	    
 	    position: relative;
-	    /* 지글지글 효과를 위한 애니메이션 */
-	    filter: url(#squiggle-filter);
+	    filter: url(#squiggle-filter);  /* 지글지글 효과를 위한 애니메이션 */
 	}
 
 

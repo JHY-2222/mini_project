@@ -20,20 +20,38 @@ public class RankingController extends HttpServlet {
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			// DB에서 score 기준으로 랭킹 조회
-			List<User> list = service.showRanking();
-			
-			// 디버깅용 로그 추가
-			System.out.println("랭킹 리스트 크기: " + (list != null ? list.size() : "null"));
-			
-			// JSP로 전달
-			request.setAttribute("rankingList", list);
-			request.getRequestDispatcher("/ranking.jsp").forward(request, response);
+			// 유저 정보 게임 로직에서 받았다고 가정
+			String userId = (String) request.getAttribute("GAME_USER_ID");
+			Integer score = (Integer) request.getAttribute("GAME_SCORE");
+
+			// DB 랭킹 조회
+            List<User> dbList = service.showRanking();
+            
+            User myUser = null;
+            if (userId != null && score != null) {
+                myUser = service.createMyUser(userId, score);
+            }
+
+            // 중복이 제거되고 내 최신 정보가 포함된 최종 리스트 생성
+            List<User> mergedList = service.mergeAndSort(dbList, myUser);
+
+            // [순위 찾기] 최종 리스트에서 내가 몇 번째 인덱스에 있는지 확인
+            Integer myRank = null;
+            if (myUser != null) {
+                for (int i = 0; i < mergedList.size(); i++) {
+                    if (mergedList.get(i).getUserId().equals(userId)) {
+                        myRank = i + 1; // 인덱스는 0부터이므로 +1
+                        break;
+                    }
+                }
+            }
+            request.setAttribute("rankingList", mergedList);
+            request.setAttribute("myUser", myUser);
+            request.setAttribute("myRank", myRank);
+
+            request.getRequestDispatcher("/ranking.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
-			// 에러 발생 시에도 빈 리스트라도 전달
-			request.setAttribute("rankingList",new ArrayList<User>());
-			request.getRequestDispatcher("/ranking.jsp").forward(request, response);
 		}
 	}
 }
