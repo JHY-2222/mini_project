@@ -1,8 +1,5 @@
 package service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import dao.UserDAO;
@@ -12,21 +9,30 @@ public class RankingService {
 
     private UserDAO dao = new UserDAO();
 
-    // DB 랭킹 조회
+    // 게임 결과 처리
+    public User processGameResult(String userId, int gainedScore, String name) throws Exception {
+        User dbUser = dao.findUserById(userId); // DB에 있는 유저
+        if (dbUser != null) {
+            int newScore = dbUser.getScore() + gainedScore;
+            dao.updateScore(userId, newScore);
+            dbUser.setScore(newScore);
+            return dbUser; // 공식 유저
+        }
+
+        // DB에 없는 유저 (게스트)
+        User tempUser = new User();
+        tempUser.setUserId(userId);
+        tempUser.setName(name);
+        tempUser.setScore(gainedScore);
+        return tempUser; // DB 저장 ❌
+    }
+
+    // 랭킹 조회
     public List<User> showRanking() throws Exception {
         return dao.showRanking();
     }
 
-    // 임시 User 생성
-    public User createMyUser(String userId, int score) {
-        User user = new User();
-        user.setUserId(userId);
-        user.setName(userId);
-        user.setScore(score);
-        return user;
-    }
-
-    // DB 기준 내 순위 계산
+    // DB + 임시 유저 비교해서 순위 계산
     public int calculateRank(List<User> list, User targetUser) {
         int rank = 1;
         for (User u : list) {
@@ -36,28 +42,4 @@ public class RankingService {
         }
         return rank;
     }
-    
-    // DB + 내 정보 합쳐서 정렬
-    public List<User> mergeAndSort(List<User> dbList, User myUser) {
-        // DB 복사본 생성
-        List<User> merged = new ArrayList<>(dbList);
-
-        if (myUser != null) {
-            // 나와 같은 ID가 DB 복사본 리스트에 있으면 삭제(중복 제거)
-            merged.removeIf(u -> u.getUserId().equals(myUser.getUserId()));
-            // 내 정보 리스트에 추가
-            merged.add(myUser);
-        }
-
-        // 전체 리스트 정렬
-        Collections.sort(merged, new Comparator<User>() {
-            @Override
-            public int compare(User o1, User o2) {
-                return o2.getScore() - o1.getScore();
-            }
-        });
-
-        return merged;
-    }
 }
-
