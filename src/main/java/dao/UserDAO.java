@@ -21,43 +21,45 @@ public class UserDAO {
         );
     }
 
-    // USER_ID 존재 여부 확인
+    // USER_ID로 유저 한 명 조회
     public User findUserById(String userId) throws Exception {
         String sql = "SELECT USER_ID, NAME, SCORE FROM USERS WHERE USER_ID = ?";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getString("USER_ID"));
-                user.setName(rs.getString("NAME"));
-                user.setScore(rs.getInt("SCORE"));
-                return user;
+	            ps.setString(1, userId);
+	            ResultSet rs = ps.executeQuery();
+	            if (rs.next()) {
+	                User user = new User();
+	                user.setUserId(rs.getString("USER_ID"));
+	                user.setName(rs.getString("NAME"));
+	                user.setScore(rs.getInt("SCORE"));
+	                return user;
             }
         }
-        return null;
+        return null;	// DB에 없으면 null 반환 (게스트)
     }
 
-    // 점수 업데이트
-    public void updateScore(String userId, int score) throws Exception {
-        String sql = "UPDATE USERS SET SCORE = ? WHERE USER_ID = ?";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, score);
-            ps.setString(2, userId);
-            ps.executeUpdate();
-        }
-    }
+//    // 점수 업데이트
+//    public void updateScore(String userId, int score) throws Exception {
+//        String sql = "UPDATE USERS SET SCORE = ? WHERE USER_ID = ?";
+//        try (Connection conn = getConnection();
+//             PreparedStatement ps = conn.prepareStatement(sql)) {
+//            ps.setInt(1, score);
+//            ps.setString(2, userId);
+//            ps.executeUpdate();
+//        }
+//    }
 
-    // 점수 기준 랭킹 조회
+    // 랭킹 조회
     public List<User> showRanking() throws Exception {
         List<User> list = new ArrayList<>();
+        
+        // 게스트 제외 + 점수 높은 순
         String sql = "SELECT USER_ID, NAME, SCORE FROM USERS WHERE IS_GUEST = 'N' ORDER BY SCORE DESC";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) {
+            while (rs.next()) {	// 결과를 하나씩 User 객체로 변환
                 User user = new User();
                 user.setUserId(rs.getString("USER_ID"));
                 user.setName(rs.getString("NAME"));

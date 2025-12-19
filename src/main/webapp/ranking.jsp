@@ -91,14 +91,14 @@ body {
     font-size: 1.8rem;
 }
 
-/* 점선 구분 행 스타일 */
+/* 구분용 점선 */
 .dots-row td {
-    padding: 5px 0 !important;
+    padding: 5px 0;
     font-size: 1.5rem;
     color: #888;
-    border-bottom: none !important;
+    border-bottom: none;
     text-align: center;
-    letter-spacing: 10px; /* 점 사이 간격 */
+    letter-spacing: 10px;
 }
 
 /* 1등 강조 */
@@ -131,19 +131,19 @@ body {
 </header>
 
 <% 
-    // 1. Controller에서 넘겨준 데이터 가져오기
-    List<User> list = (List<User>) request.getAttribute("rankingList"); 
-    User myUser = (User) request.getAttribute("myUser"); 
-    Integer myRank = (Integer) request.getAttribute("myRank"); 
+    // Controller에서 넘겨준 데이터 가져오기
+    List<User> list = (List<User>) request.getAttribute("rankingList");	// DB에서 가져온 랭킹 리스트
+    User myUser = (User) request.getAttribute("myUser");	// 내 유저 정보 (DB or 임시)
+    Integer myRank = (Integer) request.getAttribute("myRank"); 	// 내 순위
 
-    // 2. 새로운 출력용 리스트 생성 (DB 데이터 복사)
+    // 화면 출력용 리스트 생성 (DB 건드리지 않고 작업하기 위해 복사)
     List<User> displayList = new ArrayList<>();
     if (list != null) {
         displayList.addAll(list);
     }
 
-    // 3. 🔴 핵심 로직: 내 정보를 리스트의 해당 순위에 끼워넣기
-    // DB 업데이트 없이 메모리(displayList)에서만 처리합니다.
+    // 내 랭킹을 화면 리스트에 끼워 넣기
+    // DB 업데이트 X => 메모리(displayList)에서만 처리
     if (myUser != null && myRank != null && myRank <= 6) {
         // 이미 리스트에 내가 있는지 확인 (중복 방지)
         boolean isAlreadyIn = false;
@@ -157,7 +157,7 @@ body {
         }
 
         if (isAlreadyIn) {
-            // 이미 있다면 최신 정보(내 점수)로 교체만 함
+            // 이미 있다면 최신 정보로 교체
             displayList.set(existingIndex, myUser);
         } else {
             // 리스트에 없다면 내 순위 위치(myRank-1)에 삽입 (뒤는 자동으로 밀림)
@@ -169,7 +169,7 @@ body {
         }
     }
 %>
-
+<%-- 랭킹 테이블 --%>
 <div class="rank-box">
     <div class="crown-top">👑</div>
     <table class="rank-table">
@@ -179,29 +179,31 @@ body {
             <th>점수</th>
         </tr>
 
-        <%-- [A] 상단 내 순위 고정 (항상 강조) --%>
+        <%-- 상단 내 순위 고정 --%>
         <% if (myUser != null) { %>
         <tr class="my-rank">
             <td><%= myRank %></td>
             <td><%= myUser.getName() %></td>
             <td><%= myUser.getScore() %></td>
         </tr>
+        
+        <%-- 구분용 점선 --%>
         <tr class="dots-row">
-            <td colspan="3" style="text-align:center; color:#888; letter-spacing:10px;">...</td>
+            <td colspan="3">···</td>
         </tr>
         <% } %>
 
-        <%-- [B] 리스트 순회 (나를 포함하여 재구성된 상위 6명 출력) --%>
+        <%-- 상위 6명 출력 --%>
         <% 
         if (displayList != null) {
             int currentRank = 1;
             int previousScore = -1;
 
-            // 딱 6위까지만 출력하므로, 내가 끼어들면 원래 6위는 밀려나서 안 보임
+            // 6위까지만 출력
             for (int i = 0; i < displayList.size() && i < 6; i++) { 
                 User u = displayList.get(i); 
                 int score = u.getScore();
-
+             	// 동점자 처리
                 if (i > 0) {
                     if (score < previousScore) {
                         currentRank = i + 1;

@@ -15,14 +15,16 @@ import service.RankingService;
 
 @WebServlet("/testRanking")
 public class TestRankingController extends HttpServlet {
-    
+	// GET 요청 오면 실행
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+    	
+    	// 외부에서 정보 보냈다고 가정
+        request.setAttribute("GAME_USER_ID", 99);
+        request.setAttribute("GAME_USER_NAME", "박보검");
+        request.setAttribute("GAME_SCORE", 9900);
 
-        request.setAttribute("GAME_USER_ID", 5);        // 🔴 숫자 ID
-        request.setAttribute("GAME_USER_NAME", "박철수");  // 🔴 이름
-        request.setAttribute("GAME_SCORE", 1200);
-
+        // ranking 컨트롤러로 요청을 넘김
         request.getRequestDispatcher("/ranking").forward(request, response);
     }
 }

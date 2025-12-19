@@ -2,6 +2,8 @@ package controller;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+//import java.util.HashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -14,44 +16,33 @@ import service.RankingService;
 
 @WebServlet("/ranking")
 public class RankingController extends HttpServlet {
-
+	
+	 // 서비스 객체 생성
     private RankingService service = new RankingService();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	try {
-            // 1. 전달받은 ID와 이름 가져오기
-            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");
-            String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;
+        try {
+            // 외부에서 전달받은 값
+            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");	// getAttribute()로 받으면 String으로 받아져서 형변환
+            String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;	// DB 조회용으로 String 변환
             String userName = (String) request.getAttribute("GAME_USER_NAME");
+            Integer gameScore = (Integer) request.getAttribute("GAME_SCORE");
 
-            // 2. 랭킹 리스트 조회 (DB에서 현재 점수 상태 그대로 가져옴)
+            // DB에서 랭킹 목록 조회 (서비스 로직 실행)
             List<User> rankingList = service.showRanking();
-
-            User myUser = null;
-            int myRank = -1;
-
-            // 3. 🔴 점수 업데이트 없이 '조회'만 수행
+            
+            // 내 정보 & 순위 계산
             if (userId != null) {
-                // DB에서 해당 유저의 정보를 단순히 찾아오기만 함 (score 업데이트 X)
-                myUser = service.findUser(userId); 
-                
-                // 만약 DB에 없는 유저(게스트)라면 전달받은 이름과 점수로 임시 객체 생성
-                if (myUser == null) {
-                    myUser = new User();
-                    myUser.setUserId(userId);
-                    myUser.setName(userName);
-                    Integer scoreObj = (Integer) request.getAttribute("GAME_SCORE");
-                    myUser.setScore(scoreObj != null ? scoreObj : 0);
-                }
-                
-                // 내 순위 계산
-                myRank = service.calculateRank(rankingList, myUser);
+            	// 서비스에서 내 정보 + 내 순위 한 번에 처리
+                Map<String, Object> rankingInfo = service.getUserRankingInfo(userId, userName, gameScore, rankingList);
+                // JSP로 전달
+                request.setAttribute("myUser", rankingInfo.get("myUser"));
+                request.setAttribute("myRank", rankingInfo.get("myRank"));
             }
 
-            // 4. JSP 전달
+            // JSP로 전달
             request.setAttribute("rankingList", rankingList);
-            request.setAttribute("myUser", myUser);
-            request.setAttribute("myRank", myRank);
+            // ranking.jsp로 화면 이동
             request.getRequestDispatcher("/ranking.jsp").forward(request, response);
 
         } catch (Exception e) {
