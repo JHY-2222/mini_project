@@ -18,37 +18,42 @@ public class RankingController extends HttpServlet {
     private RankingService service = new RankingService();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            // 게임 후 결과 받았다고 가정
-        	Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");
+    	try {
+            // 1. 전달받은 ID와 이름 가져오기
+            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");
             String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;
-            
             String userName = (String) request.getAttribute("GAME_USER_NAME");
-            
-            // 🔴 GAME_SCORE도 Integer 객체로 받아 언박싱
-            Integer scoreObj = (Integer) request.getAttribute("GAME_SCORE");
-            int gainedScore = (scoreObj != null) ? scoreObj : 0;
+
+            // 2. 랭킹 리스트 조회 (DB에서 현재 점수 상태 그대로 가져옴)
+            List<User> rankingList = service.showRanking();
 
             User myUser = null;
             int myRank = -1;
 
-            // 랭킹 조회
-            List<User> rankingList = service.showRanking();
-
-            // 게임 결과가 있으면 처리
+            // 3. 🔴 점수 업데이트 없이 '조회'만 수행
             if (userId != null) {
-            	// myUser = processGameResult 호출
-            	myUser = service.processGameResult(userId, gainedScore, userName);
-            	// 랭킹 계산
-                myRank = service.calculateRank(rankingList, myUser);
+                // DB에서 해당 유저의 정보를 단순히 찾아오기만 함 (score 업데이트 X)
+                myUser = service.findUser(userId); 
                 
+                // 만약 DB에 없는 유저(게스트)라면 전달받은 이름과 점수로 임시 객체 생성
+                if (myUser == null) {
+                    myUser = new User();
+                    myUser.setUserId(userId);
+                    myUser.setName(userName);
+                    Integer scoreObj = (Integer) request.getAttribute("GAME_SCORE");
+                    myUser.setScore(scoreObj != null ? scoreObj : 0);
+                }
+                
+                // 내 순위 계산
+                myRank = service.calculateRank(rankingList, myUser);
             }
 
-            // JSP 전달
+            // 4. JSP 전달
             request.setAttribute("rankingList", rankingList);
             request.setAttribute("myUser", myUser);
             request.setAttribute("myRank", myRank);
             request.getRequestDispatcher("/ranking.jsp").forward(request, response);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

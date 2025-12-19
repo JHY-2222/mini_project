@@ -130,6 +130,46 @@ body {
     <img src="${pageContext.request.contextPath}${player.avatar}" alt="avatar" width="36" height="36">
 </header>
 
+<% 
+    // 1. Controller에서 넘겨준 데이터 가져오기
+    List<User> list = (List<User>) request.getAttribute("rankingList"); 
+    User myUser = (User) request.getAttribute("myUser"); 
+    Integer myRank = (Integer) request.getAttribute("myRank"); 
+
+    // 2. 새로운 출력용 리스트 생성 (DB 데이터 복사)
+    List<User> displayList = new ArrayList<>();
+    if (list != null) {
+        displayList.addAll(list);
+    }
+
+    // 3. 🔴 핵심 로직: 내 정보를 리스트의 해당 순위에 끼워넣기
+    // DB 업데이트 없이 메모리(displayList)에서만 처리합니다.
+    if (myUser != null && myRank != null && myRank <= 6) {
+        // 이미 리스트에 내가 있는지 확인 (중복 방지)
+        boolean isAlreadyIn = false;
+        int existingIndex = -1;
+        for (int i = 0; i < displayList.size(); i++) {
+            if (displayList.get(i).getUserId().equals(myUser.getUserId())) {
+                isAlreadyIn = true;
+                existingIndex = i;
+                break;
+            }
+        }
+
+        if (isAlreadyIn) {
+            // 이미 있다면 최신 정보(내 점수)로 교체만 함
+            displayList.set(existingIndex, myUser);
+        } else {
+            // 리스트에 없다면 내 순위 위치(myRank-1)에 삽입 (뒤는 자동으로 밀림)
+            if (displayList.size() >= myRank - 1) {
+                displayList.add(myRank - 1, myUser);
+            } else {
+                displayList.add(myUser);
+            }
+        }
+    }
+%>
+
 <div class="rank-box">
     <div class="crown-top">👑</div>
     <table class="rank-table">
@@ -139,77 +179,46 @@ body {
             <th>점수</th>
         </tr>
 
-        <% 
-            // 1. 데이터 가져오기
-            List<User> list = (List<User>) request.getAttribute("rankingList"); 
-            User myUser = (User) request.getAttribute("myUser"); 
-            Integer myRank = (Integer) request.getAttribute("myRank"); 
-
-            // 2. 중요: 원본 리스트를 복사하여 '나'를 원하는 위치에 끼워넣기
-            List<User> displayList = new ArrayList<>();
-            if (list != null) {
-                displayList.addAll(list);
-            }
-
-            // 내 순위가 1~6위 사이라면 해당 위치에 나를 끼워넣음
-            if (myUser != null && myRank != null && myRank <= 6) {
-                // 리스트 인덱스는 0부터 시작하므로 (myRank - 1) 위치에 삽입
-                if (displayList.size() >= myRank - 1) {
-                    displayList.add(myRank - 1, myUser);
-                } else {
-                    displayList.add(myUser); // 리스트가 짧으면 맨 뒤에 추가
-                }
-            }
-        %>
-
-        <%-- [A] 상단 내 순위 고정 (무조건 출력) --%>
+        <%-- [A] 상단 내 순위 고정 (항상 강조) --%>
         <% if (myUser != null) { %>
         <tr class="my-rank">
             <td><%= myRank %></td>
             <td><%= myUser.getName() %></td>
             <td><%= myUser.getScore() %></td>
         </tr>
-        
         <tr class="dots-row">
-        	<td colspan="3">...</td>
+            <td colspan="3" style="text-align:center; color:#888; letter-spacing:10px;">...</td>
         </tr>
         <% } %>
 
-        <%-- [B] 리스트 순회 (나를 포함하여 순서대로 출력) --%>
+        <%-- [B] 리스트 순회 (나를 포함하여 재구성된 상위 6명 출력) --%>
         <% 
         if (displayList != null) {
-            int currentRank = 1;      // 현재 표시할 순위
-            int sameScoreCount = 0;   // 동점자 수 카운트
-            int previousScore = -1;   // 이전 사람의 점수 저장
+            int currentRank = 1;
+            int previousScore = -1;
 
+            // 딱 6위까지만 출력하므로, 내가 끼어들면 원래 6위는 밀려나서 안 보임
             for (int i = 0; i < displayList.size() && i < 6; i++) { 
                 User u = displayList.get(i); 
                 int score = u.getScore();
 
-                // 순위 계산 로직
                 if (i > 0) {
                     if (score < previousScore) {
-                        // 점수가 낮아지면, 지금까지 쌓인 동점자 수만큼 순위를 점프
                         currentRank = i + 1;
                     }
-                    // 점수가 같으면 currentRank를 그대로 유지 (동점 처리)
                 }
-                
-                previousScore = score; // 다음 비교를 위해 현재 점수 저장
-	    %>
-	    <tr <%= (currentRank == 1) ? "class='rank-1'" : "" %>>
-	        <%-- 1등이면서 점수가 같을 수도 있으니 조건 체크 --%>
-	        <td>
-	            <% if (currentRank == 1) { %> 👑 <% } 
-	               else { %> <%= currentRank %> <% } %>
-	        </td>
-	        <td><%= u.getName() %></td>
-	        <td><%= u.getScore() %></td>
-	    </tr>
+                previousScore = score;
+        %>
+        <tr <%= (currentRank == 1) ? "class='rank-1'" : "" %>>
+            <td><%= (currentRank == 1) ? "👑" : currentRank %></td>
+            <td><%= u.getName() %></td>
+            <td><%= u.getScore() %></td>
+        </tr>
         <% 
-			} } 
+            } 
+        } 
         %>
     </table>
-	</div>
+</div>
 </body>
 </html>

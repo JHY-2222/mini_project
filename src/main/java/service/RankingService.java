@@ -42,4 +42,8 @@ public class RankingService {
         }
         return rank;
     }
+    
+    public User findUser(String userId) throws Exception {
+        return dao.findUserById(userId); // DAO의 기존 조회 메서드 활용 (업데이트 로직 없음)
+    }
 }
