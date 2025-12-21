@@ -10,7 +10,7 @@
     body {
 	    margin: 0;
 	    font-family: 'Arial';
-        background: url("${pageContext.request.contextPath}/assets/first_page.png")
+        background: url("${pageContext.request.contextPath}/img/back.png")
                     no-repeat center center fixed;
         
         background-size: cover;

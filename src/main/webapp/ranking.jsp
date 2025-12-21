@@ -8,16 +8,35 @@
 <meta charset="UTF-8">
 <title>RANK</title>
 <style>
+
+* {
+    box-sizing: border-box;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
 body {
     margin: 0;
-    font-family: 'Arial';
-    background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-        url("${pageContext.request.contextPath}/assets/first_page.png") no-repeat center center fixed;
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(rgba(225,225,225,0.7), rgba(225,225,225,0.7)),
+        url("${pageContext.request.contextPath}/img/back.png");
+    background-position: center;
     background-size: cover;
-    min-height: 100vh;
-    padding-top: 80px;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
+
+/* ===== top bar ===== */
 .top-bar {
+    width: 100%;
     background: #fff;
     height: 80px;
     display: flex;
@@ -26,6 +45,7 @@ body {
     padding: 0 40px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+
 .logo {
     font-size: 24px;
     font-weight: 800;
@@ -47,6 +67,7 @@ body {
 .menu li.active {
     color: #5483B9;
 }
+
 /* 랭킹 박스 */
 .rank-box {
     width: 70%;
@@ -74,9 +95,9 @@ body {
 }
 /* 테이블 셀 */
 .rank-table td {
-    padding: 15px;
+    padding: 16px;
     border-bottom: 2px solid #eee;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
     color: #000000;
 }
 /* 내 순위 강조 */
@@ -117,18 +138,24 @@ body {
 </style>
 </head>
 <body>
+
 <header class="top-bar">
     <div class="logo">OMOK</div>
+
     <nav class="menu">
         <ul>
-            <li class="active"><a href="RoomList.jsp">HOME</a></li>
-            <li>RANK</li>
-            <li>HOW</li>
+            <li><a href="RoomList.jsp">HOME</a></li>
+            <li class="active"><a href="ranking">RANK</a></li>
+            <li><a href="howTo.jsp">HOW</a></li>
         </ul>
     </nav>
+
     <!-- 아바타 -->
-    <img src="${pageContext.request.contextPath}${player.avatar}" alt="avatar" width="36" height="36">
+    <img src="${pageContext.request.contextPath}${player.avatar}"
+    		onerror="this.src='${pageContext.request.contextPath}/img/default-avatar.jpg'"
+    		alt="avatar" width="36" height="36">
 </header>
+
 
 <% 
     // Controller에서 넘겨준 데이터 가져오기

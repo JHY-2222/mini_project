@@ -39,16 +39,6 @@ public class UserDAO {
         return null;	// DB에 없으면 null 반환 (게스트)
     }
 
-//    // 점수 업데이트
-//    public void updateScore(String userId, int score) throws Exception {
-//        String sql = "UPDATE USERS SET SCORE = ? WHERE USER_ID = ?";
-//        try (Connection conn = getConnection();
-//             PreparedStatement ps = conn.prepareStatement(sql)) {
-//            ps.setInt(1, score);
-//            ps.setString(2, userId);
-//            ps.executeUpdate();
-//        }
-//    }
 
     // 랭킹 조회
     public List<User> showRanking() throws Exception {

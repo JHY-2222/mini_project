@@ -7,80 +7,72 @@
 <title>게임 방법</title>
 
 <style>
-    body {
-	    margin: 0;
-	    font-family: 'Arial';
-        background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)) /*배경 불투명*/
-        			,url("${pageContext.request.contextPath}/assets/first_page.png")
-                    no-repeat center center fixed;
-        background-size: cover;
-        
-        
-        /* 화면 정중앙 박스를 놓기 위한 flex 설정 */
-        display: flex;
-        justify-content: center; /* 가로 중앙 */
-        align-items: center;     /* 세로 중앙 */
-        height: 100vh;           /* 전체 화면 높이 사용 */
-        overflow: hidden; /* 화면 크기 조절 시 스크롤 방지 */
-    }
-    
-    /* 상단 메뉴바*/
-    .nav {
-        position: fixed; /* 상단 고정 */
-        top: 0;
-        left: 0;
-        width: 100%;
-        display: flex;
-        justify-content: center; /* 메뉴들을 가로 중앙으로 */
-        align-items: center;
-        gap: 60px;               /* 메뉴 사이 간격 */
-        padding: 20px 0;
-        background: rgba(255, 255, 255); /* 흰색 배경 */
-        border-bottom: 1px solid #ddd;       /* 하단 얇은 구분선 */
-        z-index: 1000;
-    }
-    
-    /* 로고 텍스트 (OMOK) */
-    .logo-text {
-        font-weight: 900;       /* 아주 굵게 */
-        font-style: italic;     /* 기울임꼴 */
-        font-size: 1.5rem;
-        color: #000;
-        margin-right: 50px;     /* 로고와 메뉴 사이 거리 */
-        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
-    }
+* {
+    box-sizing: border-box;
+}
 
-    /* 메뉴 링크들 */
-    .nav a {
-        text-decoration: none;
-        color: #555;
-        font-weight: bold;
-        font-size: 1.1rem;
-        font-family: 'Comic Sans MS', cursive; /* 폰트 적용 */
-    }
+a,
+a:visited,
+a:hover,
+a:active {
+    color: inherit;
+    text-decoration: none;
+}
 
-    /* 활성화된 메뉴 (HOW) */
-    .nav a.active {
-        color: #85BE57; 
-    }
-    
-    /* 프로필 이미지 */
-    .profile-img {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        cursor: pointer;
-        margin-left: 30px; /* 메뉴와 간격 */
-    }
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+
+    background:
+        linear-gradient(rgba(225,225,225,0.7), rgba(225,225,225,0.7)),
+        url("${pageContext.request.contextPath}/img/back.png");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+/* ===== top bar ===== */
+.top-bar {
+    width: 100%;
+    background: #fff;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+    padding-left: 50px;
+}
+.menu ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: clamp(40px, 10vw, 300px);
+    padding-right: 100px;
+}
+.menu li {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 20px;
+}
+.menu li.active {
+    color: #5483B9;
+}
 
     /* 게임 방법 흰색 박스 */
     .how-box {
         background-color: #ffffff; /* 순백색 배경 */
         
         width: 70%;              /* 박스 너비 */
-        max-width: 800px; /* PC에서 너무 퍼져 보이지 않게 제한 */
-        min-width: 320px; /* 모바일에서 너무 좁아지지 않게 제한 */
-        
+        max-width: 700px; /* PC에서 너무 퍼져 보이지 않게 제한 */
+        margin: 40px auto;	/* 가운데 정렬 핵심 */
         min-height: 60vh;   /* 화면 높이의 60%를 최소 높이로 설정 (박스가 길어짐) */
         
         padding: 5vh 5vw;;        /* 내부 여백 (위아래 좌우) */
@@ -163,27 +155,22 @@
 
 </head>
 <body>
-	<!-- 지글지글 효과를 위한 SVG 필터 -->
-	<svg style="position: absolute; width: 0; height: 0;">
-	    <defs>
-	        <filter id="squiggle-filter">
-	            <feTurbulence baseFrequency="0.02" numOctaves="3" seed="2" />
-	            <feDisplacementMap in="SourceGraphic" scale="3" />
-	        </filter>
-	    </defs>
-	</svg>
-	
-	<nav class="nav">
-	    <span class="logo-text">OMOK</span>
-	    <a href="room">HOME</a>
-	    <a href="ranking">RANK</a>
-	    <a class="active">HOW</a>
-	    <!-- 프로필 이미지 추가 -->
-	    <img src="${pageContext.request.contextPath}/assets/profile_img.png" 
-	         alt="Profile" 
-	         class="profile-img"
-	         onclick="window.open('UserSet', 'UserSet', 'width=600,height=400')">
-	</nav>
+<header class="top-bar">
+    <div class="logo">OMOK</div>
+
+    <nav class="menu">
+        <ul>
+            <li><a href="RoomList.jsp">HOME</a></li>
+            <li><a href="ranking">RANK</a></li>
+            <li class="active"><a href="howTo.jsp">HOW</a></li>
+        </ul>
+    </nav>
+
+    <!-- 아바타 -->
+    <img src="${pageContext.request.contextPath}${player.avatar}"
+    		onerror="this.src='${pageContext.request.contextPath}/img/default-avatar.jpg'"
+    		alt="avatar" width="36" height="36">
+</header>
 	
 	<div class="how-box">
 	    <h2>🎮 게임 방법</h2>
