@@ -14,7 +14,7 @@ public class DBTest {
             List<User> list = dao.showRanking();
             System.out.println("DB 연결 성공! 랭킹 수: " + list.size());
             for(User u : list) {
-                System.out.println(u.getUserId() + " | " + u.getName() + " | " + u.getScore());
+                System.out.println(u.getUserId() + " | " + u.getNickname() + " | " + u.getScore());
             }
         } catch(Exception e) {
             e.printStackTrace();

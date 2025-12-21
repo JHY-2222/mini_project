@@ -77,7 +77,6 @@ body {
         
         padding: 5vh 5vw;;        /* 내부 여백 (위아래 좌우) */
         border-radius: 30px;       /* 모서리를 아주 둥글게 */
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
         text-align: left;          /* 텍스트 왼쪽 정렬 */
     }
 
