@@ -21,18 +21,19 @@ public class RankingService {
     	Map<String, Object> result = new HashMap<>();
     	// 내 정보를 담을 변수를 일단 비워둠
         User myUser = null;
-
-        // DB 저장 유저일 떄만 DB 뒤져봄
-        // UUID는 하이픈(-)이 포함되므로, 하이픈이 있으면 게스트로 간주하고 DB 조회 건너뛰게 설계
-        if (userId != null && !userId.isEmpty() && !userId.contains("-")) { 
+        
+        // 게스트 판별
+        boolean isGuest = (userId == null) || userId.contains("-") || (userName != null && userName.startsWith("게스트-"));
+        if (!isGuest) {
+            // 게스트가 아닐 때만 DB에 가서 진짜 회원인지 확인
             myUser = dao.findUserById(userId);
         }
         
         // 게스트일 경우
         if (myUser == null) {
             myUser = new User();
-            // ID가 없으면 임시값 부여
-            myUser.setUserId("GUEST_" + System.currentTimeMillis());
+            // 넘겨준 정보 그대로 사용
+            myUser.setUserId(userId);
             // 이름 "Guest"로 고정
             myUser.setNickname("Guest"); 
             // 넘어온 게임 점수가 있으면 세팅하고, 없으면 0점 처리
