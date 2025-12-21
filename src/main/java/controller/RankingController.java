@@ -23,8 +23,12 @@ public class RankingController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             // 외부에서 전달받은 값
-            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");	// getAttribute()로 받으면 String으로 받아져서 형변환
-            String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;	// DB 조회용으로 String 변환
+        	// (방금 수정)Integer일 수도 있고 String일 수도 있으므로 Object로 받아서 체크
+            Object userIdObj = request.getAttribute("GAME_USER_ID");
+            String userId = (userIdObj != null) ? String.valueOf(userIdObj) : null;
+            
+//            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");	// getAttribute()로 받으면 String으로 받아져서 형변환
+//            String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;	// DB 조회용으로 String 변환
             String userName = (String) request.getAttribute("GAME_USER_NAME");
             Integer gameScore = (Integer) request.getAttribute("GAME_SCORE");
 

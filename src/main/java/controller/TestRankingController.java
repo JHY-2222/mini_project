@@ -20,9 +20,9 @@ public class TestRankingController extends HttpServlet {
             throws ServletException, IOException {
     	
     	// 외부에서 정보 보냈다고 가정
-        request.setAttribute("GAME_USER_ID", 99);
-        request.setAttribute("GAME_USER_NAME", "박보검");
-        request.setAttribute("GAME_SCORE", 9900);
+        request.setAttribute("GAME_USER_ID", "");
+        request.setAttribute("GAME_USER_NAME", "");
+        request.setAttribute("GAME_SCORE", 9917);
 
         // ranking 컨트롤러로 요청을 넘김
         request.getRequestDispatcher("/ranking").forward(request, response);

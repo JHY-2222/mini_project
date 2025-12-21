@@ -6,12 +6,10 @@ import lombok.Data;
 public class User {
     private String userId;
     private String pwd;
-    private String name;
+    private String nickname;
     private String email;
     private String img;
     private int stone_style;
     private int score;
     private String is_guest;   
 }
-
-

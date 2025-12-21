@@ -210,7 +210,7 @@ body {
         <% if (myUser != null) { %>
         <tr class="my-rank">
             <td><%= myRank %></td>
-            <td><%= myUser.getName() %></td>
+            <td><%= myUser.getNickname() %></td>
             <td><%= myUser.getScore() %></td>
         </tr>
         
@@ -240,7 +240,7 @@ body {
         %>
         <tr <%= (currentRank == 1) ? "class='rank-1'" : "" %>>
             <td><%= (currentRank == 1) ? "👑" : currentRank %></td>
-            <td><%= u.getName() %></td>
+            <td><%= u.getNickname() %></td>
             <td><%= u.getScore() %></td>
         </tr>
         <% 

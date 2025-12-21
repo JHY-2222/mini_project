@@ -31,7 +31,7 @@ public class UserDAO {
 	            if (rs.next()) {
 	                User user = new User();
 	                user.setUserId(rs.getString("USER_ID"));
-	                user.setName(rs.getString("NAME"));
+	                user.setNickname(rs.getString("NAME"));
 	                user.setScore(rs.getInt("SCORE"));
 	                return user;
             }
@@ -52,7 +52,7 @@ public class UserDAO {
             while (rs.next()) {	// 결과를 하나씩 User 객체로 변환
                 User user = new User();
                 user.setUserId(rs.getString("USER_ID"));
-                user.setName(rs.getString("NAME"));
+                user.setNickname(rs.getString("NAME"));
                 user.setScore(rs.getInt("SCORE"));
                 list.add(user);
             }
