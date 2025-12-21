@@ -27,8 +27,6 @@ public class RankingController extends HttpServlet {
             Object userIdObj = request.getAttribute("GAME_USER_ID");
             String userId = (userIdObj != null) ? String.valueOf(userIdObj) : null;
             
-//            Integer userIdInt = (Integer) request.getAttribute("GAME_USER_ID");	// getAttribute()로 받으면 String으로 받아져서 형변환
-//            String userId = (userIdInt != null) ? String.valueOf(userIdInt) : null;	// DB 조회용으로 String 변환
             String userName = (String) request.getAttribute("GAME_USER_NAME");
             Integer gameScore = (Integer) request.getAttribute("GAME_SCORE");
 

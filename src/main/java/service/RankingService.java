@@ -7,52 +7,62 @@ import dao.UserDAO;	// DB 접근 객체
 import domain.User;	// 유저 한 명 표현 객체
 
 public class RankingService {
+	// DAO 객체 생성
+    private UserDAO dao = new UserDAO();	
 
-    private UserDAO dao = new UserDAO();	// DAO 객체 생성
-
-    // 랭킹 목록 조회
+    // DB 점수 기준 랭킹 목록 조회
     public List<User> showRanking() throws Exception {
-        return dao.showRanking();	// DB에서 점수 기준으로 정렬된 유저 목록 가져옴
+        return dao.showRanking();
     }
 
-    // New 코
+    // 내 랭킹 정보 조회(로그인 유저 vs 게스트 구분)
     public Map<String, Object> getUserRankingInfo(String userId, String userName, Integer gameScore, List<User> rankingList) throws Exception {
-        Map<String, Object> result = new HashMap<>();
+    	// 결과를 담아서 컨트롤러에 넘겨줄 보따리(Map) 생성
+    	Map<String, Object> result = new HashMap<>();
+    	// 내 정보를 담을 변수를 일단 비워둠
         User myUser = null;
 
-        // userId가 존재할 때만 DB 조회 시도
+        // DB 저장 유저일 떄만 DB 뒤져봄
+        // UUID는 하이픈(-)이 포함되므로, 하이픈이 있으면 게스트로 간주하고 DB 조회 건너뛰게 설계
         if (userId != null && !userId.isEmpty() && !userId.contains("-")) { 
-            // UUID는 하이픈(-)이 포함되므로, 하이픈이 있으면 게스트로 간주하고 DB 조회를 건너뛰게 설계
             myUser = dao.findUserById(userId);
         }
         
-        // 게스트이거나 DB에 없는 경우
+        // 게스트일 경우
         if (myUser == null) {
             myUser = new User();
-            // ID가 없으면 중복 체크 로직에서 에러 안 나게 임시값 부여
+            // ID가 없으면 임시값 부여
             myUser.setUserId("GUEST_" + System.currentTimeMillis());
-            myUser.setNickname("Guest"); // 입력값 무시하고 "Guest"로 고정
+            // 이름 "Guest"로 고정
+            myUser.setNickname("Guest"); 
+            // 넘어온 게임 점수가 있으면 세팅하고, 없으면 0점 처리
             myUser.setScore(gameScore != null ? gameScore : 0);
         }
         
+        // 현재 내 점수가 전체 랭킹 리스트에서 몇 등인지 계산
         int myRank = calculateRank(rankingList, myUser.getScore());
         
+        // 보따리에 '내 정보 객체'와 '계산된 순위' 담음
         result.put("myUser", myUser);
         result.put("myRank", myRank);
+        // 완성된 보따리 반환
         return result;
     }
 
     // 순위 계산 로직
     public int calculateRank(List<User> list, int score) {
-        int rank = 1;	 // 기본 1등부터 시작
+    	// 기본 1등부터 시작해서 나보다 잘난 사람 찾음
+        int rank = 1;
         if (list != null) {
         	// 랭킹 목록을 하나씩 비교
             for (User u : list) {
                 if (u.getScore() > score) {
+                	// 내 등수를 한 칸 뒤로 미룸
                     rank++;
                 }
             }
         }
+        // 최종 계산된 등수
         return rank;
     }
 }

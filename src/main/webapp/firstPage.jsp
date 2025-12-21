@@ -78,9 +78,10 @@
 	
 	<div class="main-container">
 	   <div class="btn-group">
-	       <a href="${pageContext.request.contextPath}/room"
-	          class="btn primary">GAME START</a>
-	
+	   		<%-- 클릭 시 컨트롤러 → 컨트롤러가 UUID를 만들고 세션에 User 객체를 저장 → 방 목록으로 도착 --%>
+	       <a href="${pageContext.request.contextPath}/first?action=start"
+	          class="btn">GAME START</a>
+			<%-- 로그인 창으로 이동 --%>
 	       <a href="${pageContext.request.contextPath}/login"
 	          class="btn">LOGIN</a>
     	</div>
