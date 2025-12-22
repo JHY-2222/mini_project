@@ -22,10 +22,8 @@ public class RankingService {
     	// 내 정보를 담을 변수를 일단 비워둠
         User myUser = null;
         
-        // 게스트 판별
-        boolean isGuest = (userId == null) || userId.contains("-") || (userName != null && userName.startsWith("게스트-"));
-        if (!isGuest) {
-            // 게스트가 아닐 때만 DB에 가서 진짜 회원인지 확인
+        // 게스트 판별(DB에서 해당 ID로 회원 찾아봄)
+        if (userId != null) {
             myUser = dao.findUserById(userId);
         }
         
