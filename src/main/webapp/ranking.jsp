@@ -158,39 +158,39 @@ body {
 
 
 <% 
-    // Controller에서 넘겨준 데이터 가져오기
-    List<User> list = (List<User>) request.getAttribute("rankingList");	// DB에서 가져온 랭킹 리스트
-    User myUser = (User) request.getAttribute("myUser");	// 내 유저 정보 (DB or 임시)
-    Integer myRank = (Integer) request.getAttribute("myRank"); 	// 내 순위
+    // Controller가 저장해준 전체 랭킹 리스트 꺼내기
+    List<User> list = (List<User>) request.getAttribute("rankingList"); 
+	//Controller가 저장해준 내 유저 정보 객체 꺼내기
+    User myUser = (User) request.getAttribute("myUser"); 
+ 	// Controller가 저장해준 내 순위 숫자 꺼내기
+    Integer myRank = (Integer) request.getAttribute("myRank"); 
 
-    // 화면 출력용 리스트 생성 (DB 건드리지 않고 작업하기 위해 복사)
+    // 화면 출력용 리스트 생성 (DB 데이터 복사, 원본 유지 목적)
     List<User> displayList = new ArrayList<>();
     if (list != null) {
         displayList.addAll(list);
     }
 
-    // 내 랭킹을 화면 리스트에 끼워 넣기
-    // DB 업데이트 X => 메모리(displayList)에서만 처리
-    if (myUser != null && myRank != null && myRank <= 6) {
-        // 이미 리스트에 내가 있는지 확인 (중복 방지)
+    // 내 정보(게스트 포함)를 리스트에 실제로 삽입하여 순위를 재구성
+    if (myUser != null && myRank != null) {
+    	// 내가 이미 리스트에 있는지 체크할 변수
         boolean isAlreadyIn = false;
-        int existingIndex = -1;
-        for (int i = 0; i < displayList.size(); i++) {
-            if (displayList.get(i).getUserId().equals(myUser.getUserId())) {
-                isAlreadyIn = true;
-                existingIndex = i;
+        // 이름 기준으로 리스트에 내가 이미 포함되어 있는지 검사 (중복 방지)
+        for (User u : displayList) {
+            if (u.getNickname().equals(myUser.getNickname())) {
+                isAlreadyIn = true;	// 이미 있으면 추가 안 함
                 break;
             }
         }
 
-        if (isAlreadyIn) {
-            // 이미 있다면 최신 정보로 교체
-            displayList.set(existingIndex, myUser);
-        } else {
-            // 리스트에 없다면 내 순위 위치(myRank-1)에 삽입 (뒤는 자동으로 밀림)
-            if (displayList.size() >= myRank - 1) {
-                displayList.add(myRank - 1, myUser);
+        // 리스트에 내가 없다면 (게스트라면)
+        if (!isAlreadyIn) {
+            int insertIndex = myRank - 1; // 순위는 1부터 시작하므로 index는 -1
+         	// 리스트 범위 안이라면 해당 위치에 '나'를 강제로 삽입 (뒤에 사람들은 자동으로 밀림)
+            if (insertIndex >= 0 && insertIndex <= displayList.size()) {
+                displayList.add(insertIndex, myUser);
             } else {
+            	// 꼴찌면 리스트 맨 마지막에 추가
                 displayList.add(myUser);
             }
         }
