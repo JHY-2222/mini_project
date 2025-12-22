@@ -138,15 +138,17 @@ body {
 </style>
 </head>
 <body>
-
+<%
+    String ctx = request.getContextPath();
+%>
 <header class="top-bar">
     <div class="logo">OMOK</div>
 
     <nav class="menu">
         <ul>
-            <li><a href="RoomList.jsp">HOME</a></li>
-            <li class="active"><a href="ranking">RANK</a></li>
-            <li><a href="howTo.jsp">HOW</a></li>
+            <li><a href="<%=ctx%>/roomList.jsp">HOME</a></li>
+            <li class="active"><a href="<%=ctx%>/ranking">RANK</a></li>
+            <li><a href="<%=ctx%>/howto">HOW</a></li>
         </ul>
     </nav>
 
